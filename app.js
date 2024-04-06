@@ -9,8 +9,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(
-    { origin:"https://e-cart-india.netlify.app",
-    credentials: true,}
+    // { origin:"https://e-cart-india.netlify.app",
+    // credentials: true,}
 ));
 
 import userRoutes from "./routes/userRoutes.js";
