@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(
-    origin:*,
+    origin:"https://e-cart-india.netlify.app",
     credentials: true,
 ));
 
