@@ -16,10 +16,9 @@ import {
 
 router
   .route("/")
-  // .post(authenticate, createOrder)
-  // .get(authenticate, authorizeAdmin, getAllOrders);
- .post( createOrder)
-  .get( authorizeAdmin, getAllOrders);
+  .post(authenticate, createOrder)
+  .get(authenticate, authorizeAdmin, getAllOrders);
+
 
 router.route("/mine").get(authenticate, getUserOrder);
 router.route("/total-orders").get(countTotalOrders);
