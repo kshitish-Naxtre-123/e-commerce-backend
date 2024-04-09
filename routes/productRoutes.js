@@ -13,7 +13,8 @@ import {
   fetchTopProducts,
   fetchNewProducts,
   filterProducts,
-  fetchOurProduct
+  fetchOurProduct,
+  getRecommendedProducts,
 } from "../controllers/productControllers.js";
 
 import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
@@ -27,14 +28,17 @@ router.route("/allproducts").get(fetchAllProducts);
 router.route("/:id/reviews").post(authenticate, checkId, addProductReview);
 router.route("/top").get(fetchTopProducts);
 router.route("/our-product").get(fetchOurProduct);
-
+router.route("/recom/:id").get(getRecommendedProducts);
 router.route("/new").get(fetchNewProducts);
+
 router
   .route("/:id")
   .get(fetchProductById)
+
   .put(authenticate, authorizeAdmin, formidable(), updateProductDetails)
   .delete(authenticate, authorizeAdmin, removeProduct);
 
 router.route("/filtered-products").post(filterProducts);
+
 
 export default router;
