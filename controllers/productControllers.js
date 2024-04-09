@@ -174,7 +174,17 @@ const fetchTopProducts=asyncHandler(async(req,res)=>{
 
 const fetchNewProducts=asyncHandler(async(req,res)=>{
      try {
-        const products=await Product.find().sort({_id:-1}).limit(5)
+        const products=await Product.find().sort({createdAt:-1}).limit(4)
+        res.json(products)
+     } catch (error) {
+        console.error(error);
+        res.status(400).json(error.message)
+     }
+})
+
+const fetchOurProduct=asyncHandler(async(req,res)=>{
+    try {
+        const products=await Product.find().sort({createdAt:-1}).limit(8)
         res.json(products)
      } catch (error) {
         console.error(error);
@@ -215,6 +225,7 @@ export {
     addProductReview,
     fetchTopProducts,
     fetchNewProducts,
-    filterProducts
+    filterProducts,
+    fetchOurProduct
 }
 
