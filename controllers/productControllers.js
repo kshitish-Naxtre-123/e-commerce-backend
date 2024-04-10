@@ -165,6 +165,53 @@ const addProductReview = asyncHandler(async (req, res) => {
   }
 });
 
+const updateProductReview = asyncHandler(async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    const productId = req.params.id;
+    const reviewId = req.params.reviewId;
+
+    const product = await Product.findById(productId);
+
+    if (product) {
+      const reviewIndex = product.reviews.findIndex(
+        (r) => r._id.toString() === reviewId
+      );
+
+      if (reviewIndex === -1) {
+        res.status(404);
+        throw new Error("Review not found");
+      }
+
+      // Check if the review belongs to the current user
+      if (
+        product.reviews[reviewIndex].user.toString() !== req.user._id.toString()
+      ) {
+        res.status(401);
+        throw new Error("You are not authorized to update this review");
+      }
+
+      // Update review
+      product.reviews[reviewIndex].rating = Number(rating);
+      product.reviews[reviewIndex].comment = comment;
+
+      // Recalculate product rating
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+
+      await product.save();
+      res.status(200).json({ message: "Review updated" });
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
 const fetchTopProducts = asyncHandler(async (req, res) => {
   try {
     const products = await Product.find().sort({ _rating: -1 }).limit(4);
@@ -253,4 +300,5 @@ export {
   filterProducts,
   fetchOurProduct,
   getRecommendedProducts,
+  updateProductReview,
 };

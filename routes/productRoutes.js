@@ -15,6 +15,7 @@ import {
   filterProducts,
   fetchOurProduct,
   getRecommendedProducts,
+  updateProductReview,
 } from "../controllers/productControllers.js";
 
 import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
@@ -26,6 +27,9 @@ router
   .post(authenticate, authorizeAdmin, formidable(), addProduct);
 router.route("/allproducts").get(fetchAllProducts);
 router.route("/:id/reviews").post(authenticate, checkId, addProductReview);
+router
+  .route("/:id/reviews/:reviewId")
+  .put(authenticate, checkId, updateProductReview);
 router.route("/top").get(fetchTopProducts);
 router.route("/our-product").get(fetchOurProduct);
 router.route("/recom/:id").get(getRecommendedProducts);
@@ -39,6 +43,5 @@ router
   .delete(authenticate, authorizeAdmin, removeProduct);
 
 router.route("/filtered-products").post(filterProducts);
-
 
 export default router;
