@@ -71,17 +71,7 @@ const getAllUsers=asyncHandler(async(req,res)=>{
     const users=await User.find({})
     res.json(users)
 
-    // if(user){
-    //     res.json({
-    //         _id:user._id,
-    //         username:user.username,
-    //         email:user.email
-    //     })
-    // }
-    // else{
-    //     req.status(404)
-    //     throw  new Error("user not found")
-    // }
+
 
 })
 
