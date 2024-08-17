@@ -10,8 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://shop-with-me.netlify.app/",
     // origin:"http://localhost:5173",
+     origin: "https://e-cart-india.netlify.app",
     credentials: true,
   })
 );
