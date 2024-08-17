@@ -18,7 +18,11 @@ const userSchema=mongoose.Schema({
         type:Boolean,
         required:true,
         default:false
-    }
+    },
+    resetToken: {
+        type: String
+    },
+
 },{timestamps:true})
 
 const User= mongoose.model('User',userSchema)

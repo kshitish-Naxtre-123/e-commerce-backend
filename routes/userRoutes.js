@@ -8,7 +8,9 @@ import {
   updateCurrentUserProfile,
   deleteUserById,
   getUserById,
-  updateUserById
+  updateUserById,
+  requestPasswordReset,
+  resetPassword
 } from "../controllers/userController.js";
 import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
 const router = express.Router();
@@ -18,7 +20,9 @@ router
 .post(createUser)
 .get(authenticate,authorizeAdmin,getAllUsers);
 
-router.post("/auth", loginUser);
+router.post("/auth", loginUser);  
+router.post('/auth/request-password-reset', requestPasswordReset);
+router.post('/auth/reset-password', resetPassword);
 router.post("/logout", logoutCurrentUser);
 
 router
@@ -31,6 +35,8 @@ router.route('/:id')
 .delete(authenticate,authorizeAdmin,deleteUserById)
 .get(authenticate,authorizeAdmin,getUserById)
 .put(authenticate,authorizeAdmin,updateUserById)
+
+
 
 export default router;
 

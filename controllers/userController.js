@@ -2,6 +2,8 @@ import User from "../models/userModel.js";
 import asyncHandler from '../middlewares/asyncHandler.js'
 import bcrypt from 'bcryptjs'
 import createToken from '../utils/createToken.js'
+import crypto from 'crypto'
+import {sendPasswordResetEmail} from '../utils/emailUtils.js'
 
 const createUser=asyncHandler(async(req,res)=>{
     const {username,email,password}=req.body
@@ -174,7 +176,50 @@ const updateUserById =asyncHandler(async(req,res)=>{
 
 })
 
-export {createUser,
+const requestPasswordReset=asyncHandler(async(req,res)=>{
+    const{email}=req.body
+    const user=await User.findOne({email})
+
+    if (!user){
+        return res.status(404).json({message: "User not found"})
+    }
+
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString(); 
+    user.resetToken = resetCode;
+
+    await user.save();
+    await sendPasswordResetEmail(email,resetCode)
+
+    res.status(200).json({
+        message: "Password reset code sent to your email",
+        email
+    });
+})
+
+ const resetPassword = asyncHandler(async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    const user = await User.findOne({
+        resetToken: token,
+    });
+
+    if (!user) {
+        return res.status(400).json({ message: "Invalid token or email" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10); 
+    user.resetToken = undefined;
+
+    await user.save();
+
+    res.status(200).json({
+        message: "Password reset successful",
+        newPassword,
+    });
+});
+
+export {
+    createUser,
     loginUser,
     logoutCurrentUser,
     getAllUsers,
@@ -182,6 +227,9 @@ export {createUser,
     updateCurrentUserProfile,
     deleteUserById,
     getUserById,
-    updateUserById
+    updateUserById,
+    requestPasswordReset,
+    resetPassword,
+
 }
 
